@@ -116,27 +116,32 @@ function startGame() {
 
 startGame();
 timer();
+const insideTimer = document.getElementById("timer");
 
 function timer() {
-  let i = 120;
-  const timer = document.getElementById("timer");
+  let i = 3;
+
   setInterval(() => {
-    timer.textContent = `${i}`;
+    insideTimer.textContent = `${i}`;
     if (i > 0) {
       i--;
     } else {
-      i = 0;
+      endGame();
     }
   }, 1000);
 }
 
-// function endGame() {
-//   const timer = document.getElementById("timer");
-//   if (parseInt(timer.textContent) === 0) {
+function endGame() {
+  const endMessage = document.querySelector(".endMessage");
 
-//   }
+  if (insideTimer.textContent === "0") {
+    endMessage.classList.remove("invisible");
+  } else {
+    endMessage.classList.add("invisible");
+    console.log("letsgo");
+  }
+}
 
-// }
 window.addEventListener("keydown", (event) => {
   player1.setSpeed(event.key);
   player2.setSpeed(event.key);

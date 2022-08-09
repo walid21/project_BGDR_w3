@@ -13,11 +13,12 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
-div {
+#street {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 header {
   display: flex;
@@ -52,4 +53,21 @@ header {
 }
 canvas {
   border: 1px solid red;
+}
+
+.endMessage {
+  position: absolute;
+  align-self: center;
+  text-align: center;
+  padding-top: 3.5rem;
+  width: 40rem;
+  height: 40rem;
+  background-image: url(./image/ko_message.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  top: 50%;
+}
+
+.invisible {
+  display: none;
 }
