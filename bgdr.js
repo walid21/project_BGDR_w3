@@ -16,15 +16,14 @@ class Player {
     ctx.fillStyle = "red";
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
+
   move() {
     if (this.position.x + this.velocity.x < 0) {
       this.position.x = 0;
       this.velocity.x = 0;
-      console.log("iamout");
     } else if (this.position.x + this.velocity.x + this.width >= canvas.width) {
       this.position.x = canvas.width - this.width;
       this.velocity.x = 0;
-      console.log("iamout");
     } else {
       this.position.x += this.velocity.x;
     }
@@ -38,6 +37,7 @@ class Player {
     }
     this.draw();
   }
+
   setSpeed(key) {
     switch (key) {
       case this.keys[0]:
@@ -60,6 +60,7 @@ class Player {
         break;
     }
   }
+
   stop(key) {
     switch (key) {
       case this.keys[3]:
@@ -106,17 +107,37 @@ const player2 = new Player({
   keys: ["j", "i", "l", "k"],
 });
 
-function gameStart() {
-  window.requestAnimationFrame(gameStart);
+function startGame() {
+  window.requestAnimationFrame(startGame);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player1.move();
   player2.move();
 }
 
-gameStart();
+startGame();
+timer();
 
+function timer() {
+  let i = 120;
+  const timer = document.getElementById("timer");
+  setInterval(() => {
+    timer.textContent = `${i}`;
+    if (i > 0) {
+      i--;
+    } else {
+      i = 0;
+    }
+  }, 1000);
+}
+
+// function endGame() {
+//   const timer = document.getElementById("timer");
+//   if (parseInt(timer.textContent) === 0) {
+
+//   }
+
+// }
 window.addEventListener("keydown", (event) => {
-  console.log(event.key);
   player1.setSpeed(event.key);
   player2.setSpeed(event.key);
 });

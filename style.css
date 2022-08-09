@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "pixelFont";
+  src: url("./font/PublicPixel-0W5Kv.ttf") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -34,12 +39,16 @@ header {
 #timer {
   display: flex;
   flex-grow: 1;
+  align-items: center;
+  justify-content: center;
   height: 6rem;
   width: 20%;
   border: 3px solid black;
   background-color: white;
   border-radius: 10px;
   margin: 0 1rem;
+  font-size: 60px;
+  font-family: "pixelFont";
 }
 canvas {
   border: 1px solid red;
