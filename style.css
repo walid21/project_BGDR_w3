@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-image: url("./image/background4.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+}
+.lifebar {
+  display: flex;
+  height: 3rem;
+  width: 40%;
+  background-color: orangered;
+  border: 5px solid yellow;
+  border-radius: 10px;
+}
+
+#timer {
+  display: flex;
+  flex-grow: 1;
+  height: 6rem;
+  width: 20%;
+  border: 3px solid black;
+  background-color: white;
+  border-radius: 10px;
+  margin: 0 1rem;
+}
+canvas {
+  border: 1px solid red;
+}
