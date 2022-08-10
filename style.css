@@ -37,6 +37,12 @@ header {
   border-radius: 10px;
 }
 
+#p1-lost-life,
+#p2-lost-life {
+  background-color: cyan;
+  width: 100%;
+}
+
 #timer {
   display: flex;
   flex-grow: 1;

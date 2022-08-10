@@ -5,15 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
-    <script defer src="./bgdr.js"></script>
+    <script defer src="./game.js"></script>
     <title>Bagarre de Rue</title>
   </head>
   <body>
     <div id="street">
       <header>
-        <div class="lifebar" id="p1-life"></div>
+        <div class="lifebar" id="p1-life">
+          <div id="p1-lost-life"></div>
+        </div>
         <div id="timer"></div>
-        <div class="lifebar" id="p2-life"></div>
+        <div class="lifebar" id="p2-life">
+          <div id="p2-lost-life"></div>
+        </div>
       </header>
       <canvas></canvas>
       <div class="endMessage invisible"></div>

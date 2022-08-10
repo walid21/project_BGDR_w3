@@ -2,6 +2,9 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 1280;
 canvas.height = 1024;
+const insideTimer = document.getElementById("timer");
+const p1_lifebar = document.getElementById("p1-lost-life");
+const p2_lifebar = document.getElementById("p2-lost-life");
 
 class Player {
   constructor({ position, velocity, keys, turnBack }) {
@@ -20,12 +23,13 @@ class Player {
       height: 80,
     };
     this.turnBack = turnBack;
+    this.health = 100;
   }
   draw() {
     ctx.fillStyle = "red";
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillRect(this.arm.position.x, this.arm.position.y, this.arm.width, this.arm.height);
-    this.arm.position.x = this.position.x + this.turnBack.x;
+    this.arm.position.x = this.position.x - this.turnBack.x;
     this.arm.position.y = this.position.y;
   }
 
@@ -130,12 +134,10 @@ const player2 = new Player({
   },
   keys: ["j", "i", "l", "k", "p"],
   turnBack: {
-    x: -250,
+    x: 170,
     y: 0,
   },
 });
-
-const insideTimer = document.getElementById("timer");
 
 function timer() {
   let i = 120;
@@ -156,32 +158,44 @@ function initiateGame() {
   player1.move();
   player2.move();
 
-  // player1 punch
+  // player1 hit conditions + health bar handling
   if (
     player1.position.x + player1.arm.width >= player2.position.x &&
-    player1.position.x + player1.width <= player2.position.x &&
     player1.position.x + player1.width <= player2.position.x &&
     player1.position.y + player1.arm.height >= player2.position.y
   ) {
     console.log("aïe");
     player1.arm.width = 0;
+    player2.health -= 5;
+    p2_lifebar.style.width = `${player2.health}%`;
+  }
+  // player2 hit conditions + health bar handling
+  if (
+    player2.position.x + player2.width - player2.arm.width <= player1.position.x + player1.width &&
+    player2.position.x >= player1.position.x + player1.width &&
+    player2.position.y + player2.arm.height >= player1.position.y
+  ) {
+    console.log("aïe");
+    player2.arm.width = 0;
+    player1.health -= 5;
+    p1_lifebar.style.width = `${player1.health}%`;
   }
 }
 
 function endGame() {
-  // const endMessage = document.querySelector(".endMessage");
-  // if (insideTimer.textContent === "0") {
-  //   endMessage.classList.remove("invisible");
-  // } else {
-  //   endMessage.classList.add("invisible");
-  //   console.log("letsgo");
-  // }
+  const endMessage = document.querySelector(".endMessage");
+  if (insideTimer.textContent === "0" || player2.health === 0 || player1.health === 0) {
+    endMessage.classList.remove("invisible");
+  } else {
+    endMessage.classList.add("invisible");
+    console.log("letsgo");
+  }
 }
 
 //initiate game and timer
 initiateGame();
 timer();
-
+endGame();
 // all the event listener
 window.addEventListener("keydown", (event) => {
   player1.setSpeed(event.key);
