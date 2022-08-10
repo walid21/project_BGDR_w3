@@ -5,6 +5,8 @@ canvas.height = 1024;
 const insideTimer = document.getElementById("timer");
 const p1_lifebar = document.getElementById("p1-lost-life");
 const p2_lifebar = document.getElementById("p2-lost-life");
+let time = 120;
+let frame = 0;
 
 class Player {
   constructor({ position, velocity, keys, turnBack }) {
@@ -139,30 +141,30 @@ const player2 = new Player({
   },
 });
 
-function timer() {
-  let i = 120;
-
-  setInterval(() => {
-    insideTimer.textContent = `${i}`;
-    if (i > 0) {
-      i--;
-    } else {
-      endGame();
-    }
-  }, 1000);
-}
-
 function initiateGame() {
-  window.requestAnimationFrame(initiateGame);
+  const animation = window.requestAnimationFrame(initiateGame);
+  console.log("yo");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player1.move();
   player2.move();
+
+  //Timer
+  insideTimer.textContent = `${time}`;
+  frame++;
+  console.log(frame);
+  if (frame === 60) {
+    if (time > 0) {
+      time--;
+    }
+    frame = 0;
+  }
 
   // player1 hit conditions + health bar handling
   if (
     player1.position.x + player1.arm.width >= player2.position.x &&
     player1.position.x + player1.width <= player2.position.x &&
-    player1.position.y + player1.arm.height >= player2.position.y
+    player1.position.y + player1.arm.height >= player2.position.y &&
+    player2.health > 0
   ) {
     console.log("aïe");
     player1.arm.width = 0;
@@ -173,29 +175,38 @@ function initiateGame() {
   if (
     player2.position.x + player2.width - player2.arm.width <= player1.position.x + player1.width &&
     player2.position.x >= player1.position.x + player1.width &&
-    player2.position.y + player2.arm.height >= player1.position.y
+    player2.position.y + player2.arm.height >= player1.position.y &&
+    player1.health > 0
   ) {
     console.log("aïe");
     player2.arm.width = 0;
     player1.health -= 5;
     p1_lifebar.style.width = `${player1.health}%`;
   }
+
+  endGame(animation);
 }
 
-function endGame() {
+function endGame(animationName) {
   const endMessage = document.querySelector(".endMessage");
   if (insideTimer.textContent === "0" || player2.health === 0 || player1.health === 0) {
     endMessage.classList.remove("invisible");
+    if (player2.health === 0) {
+      insideTimer.textContent = "PLAYER 1 WIN";
+    } else if (player1.health === 0) {
+      insideTimer.textContent = "PLAYER 2 WIN";
+    }
+    time = 0;
+    window.cancelAnimationFrame(animationName);
   } else {
     endMessage.classList.add("invisible");
-    console.log("letsgo");
   }
 }
 
 //initiate game and timer
 initiateGame();
-timer();
-endGame();
+//timer(time);
+
 // all the event listener
 window.addEventListener("keydown", (event) => {
   player1.setSpeed(event.key);
