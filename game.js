@@ -5,6 +5,8 @@ canvas.height = 1024;
 const insideTimer = document.getElementById("timer");
 const p1_lifebar = document.getElementById("p1-lost-life");
 const p2_lifebar = document.getElementById("p2-lost-life");
+const endMessage = document.querySelector(".endMessage");
+const restartBtn = document.querySelector("#restart-btn");
 let time = 120;
 let frame = 0;
 
@@ -141,9 +143,29 @@ const player2 = new Player({
   },
 });
 
-function initiateGame() {
-  const animation = window.requestAnimationFrame(initiateGame);
-  console.log("yo");
+function endGame(animationName) {
+  if (insideTimer.textContent === "0" || player2.health === 0 || player1.health === 0) {
+    endMessage.classList.remove("invisible");
+    if (player2.health === 0) {
+      insideTimer.style.height = "90%";
+      insideTimer.style.width = "30%";
+      insideTimer.textContent = "PLAYER 1 WIN";
+    } else if (player1.health === 0) {
+      insideTimer.textContent = "PLAYER 2 WIN";
+    }
+    time = 0;
+    window.cancelAnimationFrame(animationName);
+    setTimeout(() => {
+      endMessage.style.background = "none";
+      restartBtn.classList.remove("invisible");
+    }, 2000);
+  } else {
+    endMessage.classList.add("invisible");
+  }
+}
+
+function handleGame() {
+  const animation = window.requestAnimationFrame(handleGame);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player1.move();
   player2.move();
@@ -151,7 +173,6 @@ function initiateGame() {
   //Timer
   insideTimer.textContent = `${time}`;
   frame++;
-  console.log(frame);
   if (frame === 60) {
     if (time > 0) {
       time--;
@@ -166,7 +187,6 @@ function initiateGame() {
     player1.position.y + player1.arm.height >= player2.position.y &&
     player2.health > 0
   ) {
-    console.log("aïe");
     player1.arm.width = 0;
     player2.health -= 5;
     p2_lifebar.style.width = `${player2.health}%`;
@@ -178,7 +198,6 @@ function initiateGame() {
     player2.position.y + player2.arm.height >= player1.position.y &&
     player1.health > 0
   ) {
-    console.log("aïe");
     player2.arm.width = 0;
     player1.health -= 5;
     p1_lifebar.style.width = `${player1.health}%`;
@@ -187,25 +206,8 @@ function initiateGame() {
   endGame(animation);
 }
 
-function endGame(animationName) {
-  const endMessage = document.querySelector(".endMessage");
-  if (insideTimer.textContent === "0" || player2.health === 0 || player1.health === 0) {
-    endMessage.classList.remove("invisible");
-    if (player2.health === 0) {
-      insideTimer.textContent = "PLAYER 1 WIN";
-    } else if (player1.health === 0) {
-      insideTimer.textContent = "PLAYER 2 WIN";
-    }
-    time = 0;
-    window.cancelAnimationFrame(animationName);
-  } else {
-    endMessage.classList.add("invisible");
-  }
-}
-
 //initiate game and timer
-initiateGame();
-//timer(time);
+handleGame();
 
 // all the event listener
 window.addEventListener("keydown", (event) => {
@@ -219,15 +221,21 @@ window.addEventListener("keyup", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  setTimeout(() => {
-    player1.attack(event.key);
-    player2.attack(event.key);
-  }, "100");
+  //setTimeout(() => {
+  player1.attack(event.key);
+  player2.attack(event.key);
+  //}, "100");
 });
 
 window.addEventListener("keyup", (event) => {
+  //setTimeout(() => {
+  player1.cover(event.key);
+  player2.cover(event.key);
+  //}, "200");
+});
+
+restartBtn.addEventListener("click", (event) => {
   setTimeout(() => {
-    player1.cover(event.key);
-    player2.cover(event.key);
-  }, "200");
+    window.location.reload();
+  }, 1000);
 });

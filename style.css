@@ -2,6 +2,10 @@
   font-family: "pixelFont";
   src: url("./font/PublicPixel-0W5Kv.ttf") format("truetype");
 }
+@font-face {
+  font-family: "SFFont";
+  src: url("./font/SSF4_ABUKET.otf") format("opentype");
+}
 
 * {
   margin: 0;
@@ -55,8 +59,8 @@ header {
   background-color: white;
   border-radius: 10px;
   margin: 0 1rem;
-  font-size: 28px;
-  font-family: "pixelFont";
+  font-size: 35px;
+  font-family: "SFFont";
 }
 canvas {
   border: 1px solid red;
@@ -73,6 +77,17 @@ canvas {
   background-repeat: no-repeat;
   background-size: contain;
   top: 50%;
+}
+
+.endMessage button {
+  width: 15rem;
+  height: 5rem;
+  border-radius: 5px;
+  border: 5px solid #240900;
+  font-family: "SFFont";
+  font-weight: bolder;
+  font-size: 30px;
+  background: linear-gradient(90deg, rgba(254, 0, 0, 1) 0%, rgba(254, 131, 2, 1) 35%, rgba(249, 195, 0, 1) 100%);
 }
 
 .invisible {
