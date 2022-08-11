@@ -10,8 +10,58 @@ const restartBtn = document.querySelector("#restart-btn");
 let time = 120;
 let frame = 0;
 
-class Player {
-  constructor({ position, velocity, keys, turnBack }) {
+class Sprite {
+  constructor({ position, imageSrc }) {
+    this.position = position;
+    this.height = 500;
+    this.width = 80;
+    this.image = new Image();
+    this.image.src = imageSrc;
+    this.frameCurrent = 0;
+    this.framesMax = 6;
+    this.framesElapsed = 0;
+    this.framesHold = 10;
+  }
+  draw() {
+    // console.log(this.image.width, this.image.height);
+    // ctx.drawImage(image, startCropX, startCropY, endCropX, endCropY, whereToDrawX, whereToDrawY, playerWidth, playerHeight);
+    // ctx.drawImage(this.image, 0, 0, 43, 140, this.position.x, this.position.y, this.width, this.height);
+    //ctx.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+
+    ctx.drawImage(
+      this.image,
+      this.frameCurrent * (this.image.width / this.framesMax),
+      0,
+      this.image.width / this.framesMax,
+      this.image.height,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+    this.animate();
+  }
+  animate() {
+    this.framesElapsed++;
+    if (this.framesElapsed % this.framesHold === 0) {
+      if (this.frameCurrent < this.framesMax) {
+        this.frameCurrent++;
+      } else {
+        this.frameCurrent = 0;
+      }
+    }
+  }
+  refresh() {
+    // this.image.src = this.imageSrc;
+    this.draw();
+  }
+}
+
+class Player extends Sprite {
+  constructor({ position, velocity, keys, turnBack, imageSrc, sprites }) {
+    super({
+      imageSrc,
+    });
     this.position = position;
     this.velocity = velocity;
     this.height = 500;
@@ -28,16 +78,26 @@ class Player {
     };
     this.turnBack = turnBack;
     this.health = 100;
+    this.frameCurrent = 0;
+    this.framesMax = 6;
+    this.framesElapsed = 0;
+    this.framesHold = 10;
+    this.sprites = sprites;
+
+    for (const sprite in this.sprites) {
+      sprites[sprite].image = new Image();
+      sprites[sprite].image.src = sprites[sprite].imageSrc;
+    }
   }
-  draw() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    ctx.fillRect(this.arm.position.x, this.arm.position.y, this.arm.width, this.arm.height);
-    this.arm.position.x = this.position.x - this.turnBack.x;
-    this.arm.position.y = this.position.y;
-  }
+  // draw() {
+  //   ctx.fillStyle = "red";
+  //   ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  //   ctx.fillRect(this.arm.position.x, this.arm.position.y, this.arm.width, this.arm.height);
+  // }
 
   move() {
+    this.draw();
+    this.animate();
     if (this.position.x + this.velocity.x < 0) {
       this.position.x = 0;
       this.velocity.x = 0;
@@ -55,7 +115,8 @@ class Player {
     } else {
       this.velocity.y += this.gravity;
     }
-    this.draw();
+    this.arm.position.x = this.position.x - this.turnBack.x;
+    this.arm.position.y = this.position.y;
   }
 
   setSpeed(key) {
@@ -68,6 +129,7 @@ class Player {
         break;
       case this.keys[3]:
         this.height = 222;
+        player1.image = player1.sprites.crouch.image;
         break;
       case this.keys[2]:
         this.velocity.x = 20;
@@ -82,6 +144,7 @@ class Player {
       case this.keys[3]:
         this.position.y -= 500;
         this.height = 500;
+        player1.image = player1.sprites.idle.image;
 
         break;
       case this.keys[0]:
@@ -111,32 +174,6 @@ class Player {
   }
 }
 
-class Sprite {
-  constructor({ position, imageSrc }) {
-    this.position = position;
-    this.height = 500;
-    this.width = 80;
-    this.image = new Image();
-    this.image.src = imageSrc;
-  }
-  draw() {
-    // console.log(this.image.src);
-    ctx.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
-  }
-
-  refresh() {
-    // this.image.src = this.imageSrc;
-    this.draw();
-  }
-}
-
-const subZero = new Sprite({
-  position: {
-    x: 0,
-    y: 0,
-  },
-  imageSrc: "./sprite/subZeroSpriteSheet.png",
-});
 const player1 = new Player({
   position: {
     x: 320,
@@ -150,6 +187,17 @@ const player1 = new Player({
   turnBack: {
     x: 0,
     y: 0,
+  },
+  imageSrc: "./sprite/ken_sprite/idle.png",
+  sprites: {
+    crouch: {
+      imageSrc: "./sprite/ken_sprite/crouch_ken.png",
+      framesMax: 6,
+    },
+    idle: {
+      imageSrc: "./sprite/ken_sprite/idle.png",
+      framesMax: 6,
+    },
   },
 });
 
@@ -193,7 +241,6 @@ function endGame(animationName) {
 function handleGame() {
   const animation = window.requestAnimationFrame(handleGame);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  subZero.refresh();
   player1.move();
   player2.move();
 

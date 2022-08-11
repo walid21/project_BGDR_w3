@@ -92,6 +92,11 @@ canvas {
   background: linear-gradient(90deg, rgba(254, 0, 0, 1) 0%, rgba(254, 131, 2, 1) 35%, rgba(249, 195, 0, 1) 100%);
 }
 
+.endMessage button:hover {
+  width: 17rem;
+  height: 7rem;
+  border-radius: 10px;
+}
 .invisible {
   display: none;
 }
