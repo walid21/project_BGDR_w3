@@ -1,6 +1,6 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = 1280;
+canvas.width = 1980;
 canvas.height = 1024;
 const insideTimer = document.getElementById("timer");
 const p1_lifebar = document.getElementById("p1-lost-life");
@@ -13,21 +13,19 @@ let frame = 0;
 class Sprite {
   constructor({ position, imageSrc }) {
     this.position = position;
-    this.height = 500;
-    this.width = 80;
+    // this.height = 500;
+    // this.width = 100;
     this.image = new Image();
     this.image.src = imageSrc;
     this.frameCurrent = 0;
     this.framesMax = 6;
     this.framesElapsed = 0;
-    this.framesHold = 10;
+    this.framesHold = 15;
   }
   draw() {
-    // console.log(this.image.width, this.image.height);
     // ctx.drawImage(image, startCropX, startCropY, endCropX, endCropY, whereToDrawX, whereToDrawY, playerWidth, playerHeight);
     // ctx.drawImage(this.image, 0, 0, 43, 140, this.position.x, this.position.y, this.width, this.height);
     //ctx.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
-
     ctx.drawImage(
       this.image,
       this.frameCurrent * (this.image.width / this.framesMax),
@@ -39,21 +37,20 @@ class Sprite {
       this.width,
       this.height
     );
+    console.log(this.image.height, this.height);
+    //  this.image.height = this.height;
+
     this.animate();
   }
   animate() {
     this.framesElapsed++;
     if (this.framesElapsed % this.framesHold === 0) {
-      if (this.frameCurrent < this.framesMax) {
+      if (this.frameCurrent < this.framesMax - 1) {
         this.frameCurrent++;
       } else {
         this.frameCurrent = 0;
       }
     }
-  }
-  refresh() {
-    // this.image.src = this.imageSrc;
-    this.draw();
   }
 }
 
@@ -65,7 +62,7 @@ class Player extends Sprite {
     this.position = position;
     this.velocity = velocity;
     this.height = 500;
-    this.width = 80;
+    this.width = 200;
     this.gravity = 6.81;
     this.keys = keys;
     this.arm = {
@@ -81,7 +78,7 @@ class Player extends Sprite {
     this.frameCurrent = 0;
     this.framesMax = 6;
     this.framesElapsed = 0;
-    this.framesHold = 10;
+    this.framesHold = 20;
     this.sprites = sprites;
 
     for (const sprite in this.sprites) {
@@ -89,11 +86,6 @@ class Player extends Sprite {
       sprites[sprite].image.src = sprites[sprite].imageSrc;
     }
   }
-  // draw() {
-  //   ctx.fillStyle = "red";
-  //   ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-  //   ctx.fillRect(this.arm.position.x, this.arm.position.y, this.arm.width, this.arm.height);
-  // }
 
   move() {
     this.draw();
@@ -123,16 +115,24 @@ class Player extends Sprite {
     switch (key) {
       case this.keys[0]:
         this.velocity.x = -20;
+        player1.image = player1.sprites.moveLeft.image;
+        player2.image = player2.sprites.moveLeft.image;
         break;
       case this.keys[1]:
         this.velocity.y = -70;
+        this.framesMax = player1.sprites.jump.framesMax;
+        player1.image = player1.sprites.jump.image;
+        player2.image = player2.sprites.jump.image;
         break;
       case this.keys[3]:
-        this.height = 222;
+        //this.height = 222;
         player1.image = player1.sprites.crouch.image;
+        player2.image = player2.sprites.crouch.image;
         break;
       case this.keys[2]:
         this.velocity.x = 20;
+        player1.image = player1.sprites.moveRight.image;
+        player2.image = player2.sprites.moveRight.image;
         break;
       default:
         break;
@@ -142,18 +142,24 @@ class Player extends Sprite {
   stop(key) {
     switch (key) {
       case this.keys[3]:
-        this.position.y -= 500;
-        this.height = 500;
+        //this.position.y -= 500;
+        //this.height = 500;
         player1.image = player1.sprites.idle.image;
+        player2.image = player2.sprites.idle.image;
 
         break;
       case this.keys[0]:
       case this.keys[2]:
         this.velocity.x = 0;
+        player1.image = player1.sprites.idle.image;
+        player2.image = player2.sprites.idle.image;
         break;
       case this.keys[1]:
         this.velocity.y = 60;
         this.position.y -= 60;
+        player1.image = player1.sprites.idle.image;
+        player2.image = player2.sprites.idle.image;
+        this.framesMax = player1.sprites.idle.framesMax;
     }
   }
 
@@ -161,6 +167,8 @@ class Player extends Sprite {
     switch (key) {
       case this.keys[4]:
         this.arm.width = 250;
+        player1.image = player1.sprites.punch.image;
+        this.framesMax = 5;
         break;
     }
   }
@@ -169,6 +177,9 @@ class Player extends Sprite {
     switch (key) {
       case this.keys[4]:
         this.arm.width = 0;
+        player1.image = player1.sprites.idle.image;
+        this.framesMax = player1.sprites.idle.framesMax;
+
         break;
     }
   }
@@ -198,6 +209,22 @@ const player1 = new Player({
       imageSrc: "./sprite/ken_sprite/idle.png",
       framesMax: 6,
     },
+    jump: {
+      imageSrc: "./sprite/ken_sprite/jump_ken.png",
+      framesMax: 8,
+    },
+    moveRight: {
+      imageSrc: "./sprite/ken_sprite/moving_right_ken-removebg-preview.png",
+      framesMax: 6,
+    },
+    moveLeft: {
+      imageSrc: "./sprite/ken_sprite/moves_left_ken-removebg-preview.png",
+      frameMax: 6,
+    },
+    punch: {
+      imageSrc: "./sprite/ken_sprite/hit_two_ken-removebg-preview.png",
+      frameMax: 3,
+    },
   },
 });
 
@@ -214,6 +241,33 @@ const player2 = new Player({
   turnBack: {
     x: 170,
     y: 0,
+  },
+  imageSrc: "./sprite/ken_sprite/idle.png",
+  sprites: {
+    crouch: {
+      imageSrc: "./sprite/wizard_sprite/Fall.png",
+      framesMax: 2,
+    },
+    idle: {
+      imageSrc: "./sprite/wizard_sprite/Idle.png",
+      framesMax: 6,
+    },
+    jump: {
+      imageSrc: "./sprite/wizard_sprite/Jump.png",
+      framesMax: 2,
+    },
+    moveRight: {
+      imageSrc: "./sprite/wizard_sprite/Run.png",
+      framesMax: 8,
+    },
+    moveLeft: {
+      imageSrc: "./sprite/wizard_sprite/Run_left.png",
+      frameMax: 8,
+    },
+    punch: {
+      imageSrc: "./sprite/wizard_sprite/Attack2.png",
+      frameMax: 8,
+    },
   },
 });
 
@@ -287,26 +341,30 @@ const initiateGame = handleGame();
 window.addEventListener("keydown", (event) => {
   player1.setSpeed(event.key);
   player2.setSpeed(event.key);
+  player1.attack(event.key);
+  player2.attack(event.key);
 });
 
 window.addEventListener("keyup", (event) => {
   player1.stop(event.key);
   player2.stop(event.key);
-});
-
-window.addEventListener("keydown", (event) => {
-  //setTimeout(() => {
-  player1.attack(event.key);
-  player2.attack(event.key);
-  //}, "100");
-});
-
-window.addEventListener("keyup", (event) => {
-  //setTimeout(() => {
   player1.cover(event.key);
   player2.cover(event.key);
-  //}, "200");
 });
+
+// window.addEventListener("keydown", (event) => {
+//   //setTimeout(() => {
+//   player1.attack(event.key);
+//   player2.attack(event.key);
+//   //}, "100");
+// });
+
+// window.addEventListener("keyup", (event) => {
+//   //setTimeout(() => {
+//   player1.cover(event.key);
+//   player2.cover(event.key);
+//   //}, "200");
+// });
 
 restartBtn.addEventListener("click", () => {
   setTimeout(() => {
