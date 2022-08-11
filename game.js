@@ -111,6 +111,32 @@ class Player {
   }
 }
 
+class Sprite {
+  constructor({ position, imageSrc }) {
+    this.position = position;
+    this.height = 500;
+    this.width = 80;
+    this.image = new Image();
+    this.image.src = imageSrc;
+  }
+  draw() {
+    // console.log(this.image.src);
+    ctx.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+  }
+
+  refresh() {
+    // this.image.src = this.imageSrc;
+    this.draw();
+  }
+}
+
+const subZero = new Sprite({
+  position: {
+    x: 0,
+    y: 0,
+  },
+  imageSrc: "./sprite/subZeroSpriteSheet.png",
+});
 const player1 = new Player({
   position: {
     x: 320,
@@ -167,6 +193,7 @@ function endGame(animationName) {
 function handleGame() {
   const animation = window.requestAnimationFrame(handleGame);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  subZero.refresh();
   player1.move();
   player2.move();
 
@@ -207,7 +234,7 @@ function handleGame() {
 }
 
 //initiate game and timer
-handleGame();
+const initiateGame = handleGame();
 
 // all the event listener
 window.addEventListener("keydown", (event) => {
@@ -234,8 +261,14 @@ window.addEventListener("keyup", (event) => {
   //}, "200");
 });
 
-restartBtn.addEventListener("click", (event) => {
+restartBtn.addEventListener("click", () => {
   setTimeout(() => {
-    window.location.reload();
+    time = 120;
+    restartBtn.classList.add("invisible");
+    p1_lifebar.style.width = "100%";
+    p2_lifebar.style.width = "100%";
+    player1.position.x = 320;
+    player2.position.x = 960;
+    handleGame();
   }, 1000);
 });
