@@ -404,8 +404,12 @@ restartBtn.addEventListener("click", () => {
     restartBtn.classList.add("invisible");
     p1_lifebar.style.width = "100%";
     p2_lifebar.style.width = "100%";
+    player1.health = 100;
+    player2.health = 100;
     player1.position.x = 320;
-    player2.position.x = 960;
+    player2.position.x = 1485;
+    time = 120;
+    insideTimer.textContent = `${time}`;
     handleGame();
   }, 1000);
 });

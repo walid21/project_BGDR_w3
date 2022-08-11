@@ -13,7 +13,7 @@
   box-sizing: border-box;
 }
 body {
-  background-image: url("./image/background4.jpeg");
+  background-image: url("./image/background1.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -63,9 +63,9 @@ header {
   font-size: 35px;
   font-family: "SFFont";
 }
-canvas {
+/* canvas {
   border: 1px solid red;
-}
+} */
 
 .endMessage {
   position: absolute;
