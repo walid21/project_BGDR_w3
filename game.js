@@ -11,33 +11,36 @@ let time = 120;
 let frame = 0;
 
 class Sprite {
-  constructor({ position, imageSrc }) {
+  constructor({ position, imageSrc, offset, scale }) {
     this.position = position;
-    // this.height = 500;
-    // this.width = 100;
+    this.height = 500;
+    this.width = 100;
     this.image = new Image();
     this.image.src = imageSrc;
     this.frameCurrent = 0;
     this.framesMax = 6;
     this.framesElapsed = 0;
     this.framesHold = 15;
+    this.offset = offset;
+    this.scale = scale;
   }
   draw() {
     // ctx.drawImage(image, startCropX, startCropY, endCropX, endCropY, whereToDrawX, whereToDrawY, playerWidth, playerHeight);
     // ctx.drawImage(this.image, 0, 0, 43, 140, this.position.x, this.position.y, this.width, this.height);
     //ctx.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+
     ctx.drawImage(
       this.image,
       this.frameCurrent * (this.image.width / this.framesMax),
       0,
       this.image.width / this.framesMax,
       this.image.height,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
+      this.position.x - this.offset.x,
+      this.position.y - this.offset.y,
+      this.width * this.scale,
+      this.height * this.scale
     );
-    console.log(this.image.height, this.height);
+    //console.log(this.image.height, this.height);
     //  this.image.height = this.height;
 
     this.animate();
@@ -55,9 +58,11 @@ class Sprite {
 }
 
 class Player extends Sprite {
-  constructor({ position, velocity, keys, turnBack, imageSrc, sprites }) {
+  constructor({ position, velocity, keys, turnBack, imageSrc, sprites, scale, offset }) {
     super({
       imageSrc,
+      offset,
+      scale,
     });
     this.position = position;
     this.velocity = velocity;
@@ -78,9 +83,8 @@ class Player extends Sprite {
     this.frameCurrent = 0;
     this.framesMax = 6;
     this.framesElapsed = 0;
-    this.framesHold = 20;
+    this.framesHold = 15;
     this.sprites = sprites;
-
     for (const sprite in this.sprites) {
       sprites[sprite].image = new Image();
       sprites[sprite].image.src = sprites[sprite].imageSrc;
@@ -115,24 +119,23 @@ class Player extends Sprite {
     switch (key) {
       case this.keys[0]:
         this.velocity.x = -20;
-        player1.image = player1.sprites.moveLeft.image;
-        player2.image = player2.sprites.moveLeft.image;
+        this.image = this.sprites.moveLeft.image;
+        this.framesMax = this.sprites.moveLeft.frameMax;
         break;
       case this.keys[1]:
         this.velocity.y = -70;
-        this.framesMax = player1.sprites.jump.framesMax;
-        player1.image = player1.sprites.jump.image;
-        player2.image = player2.sprites.jump.image;
+        this.framesMax = this.sprites.jump.framesMax;
+        this.image = this.sprites.jump.image;
         break;
       case this.keys[3]:
         //this.height = 222;
-        player1.image = player1.sprites.crouch.image;
-        player2.image = player2.sprites.crouch.image;
+        this.framesMax = this.sprites.crouch.framesMax;
+        this.image = this.sprites.crouch.image;
         break;
       case this.keys[2]:
         this.velocity.x = 20;
-        player1.image = player1.sprites.moveRight.image;
-        player2.image = player2.sprites.moveRight.image;
+        this.framesMax = this.sprites.moveRight.framesMax;
+        this.image = this.sprites.moveRight.image;
         break;
       default:
         break;
@@ -144,31 +147,30 @@ class Player extends Sprite {
       case this.keys[3]:
         //this.position.y -= 500;
         //this.height = 500;
-        player1.image = player1.sprites.idle.image;
-        player2.image = player2.sprites.idle.image;
-
+        this.image = this.sprites.idle.image;
+        this.framesMax = this.sprites.idle.framesMax;
         break;
       case this.keys[0]:
       case this.keys[2]:
         this.velocity.x = 0;
-        player1.image = player1.sprites.idle.image;
-        player2.image = player2.sprites.idle.image;
+        this.image = this.sprites.idle.image;
+        this.framesMax = this.sprites.idle.framesMax;
         break;
       case this.keys[1]:
         this.velocity.y = 60;
         this.position.y -= 60;
-        player1.image = player1.sprites.idle.image;
-        player2.image = player2.sprites.idle.image;
-        this.framesMax = player1.sprites.idle.framesMax;
+        this.image = this.sprites.idle.image;
+        this.framesMax = this.sprites.idle.framesMax;
+        break;
     }
   }
 
   attack(key) {
     switch (key) {
       case this.keys[4]:
-        this.arm.width = 250;
-        player1.image = player1.sprites.punch.image;
-        this.framesMax = 5;
+        this.arm.width = 400;
+        this.image = this.sprites.punch.image;
+        this.framesMax = this.sprites.idle.framesMax;
         break;
     }
   }
@@ -177,9 +179,8 @@ class Player extends Sprite {
     switch (key) {
       case this.keys[4]:
         this.arm.width = 0;
-        player1.image = player1.sprites.idle.image;
-        this.framesMax = player1.sprites.idle.framesMax;
-
+        this.image = this.sprites.idle.image;
+        this.framesMax = this.sprites.idle.framesMax;
         break;
     }
   }
@@ -225,12 +226,21 @@ const player1 = new Player({
       imageSrc: "./sprite/ken_sprite/hit_two_ken-removebg-preview.png",
       frameMax: 3,
     },
+    hit: {
+      imageSrc: "./sprite/ken_sprite/hit_ken-removebg-preview.png",
+      frameMax: 3,
+    },
+  },
+  scale: 1,
+  offset: {
+    x: 0,
+    y: 0,
   },
 });
 
 const player2 = new Player({
   position: {
-    x: 960,
+    x: 1485,
     y: 0,
   },
   velocity: {
@@ -242,7 +252,7 @@ const player2 = new Player({
     x: 170,
     y: 0,
   },
-  imageSrc: "./sprite/ken_sprite/idle.png",
+  imageSrc: "./sprite/wizard_sprite/Idle.png",
   sprites: {
     crouch: {
       imageSrc: "./sprite/wizard_sprite/Fall.png",
@@ -268,6 +278,15 @@ const player2 = new Player({
       imageSrc: "./sprite/wizard_sprite/Attack2.png",
       frameMax: 8,
     },
+    hit: {
+      imageSrc: "./sprite/wizard_sprite/Hit.png",
+      frameMax: 4,
+    },
+  },
+  scale: 2,
+  offset: {
+    x: 150,
+    y: 250,
   },
 });
 
@@ -317,6 +336,13 @@ function handleGame() {
   ) {
     player1.arm.width = 0;
     player2.health -= 5;
+    player2.image = player2.sprites.hit.image;
+    this.framesMax = player2.sprites.hit.framesMax;
+    setTimeout(() => {
+      player2.image = player2.sprites.idle.image;
+      this.framesMax = player2.sprites.idle.framesMax;
+    }, "180j");
+
     p2_lifebar.style.width = `${player2.health}%`;
   }
   // player2 hit conditions + health bar handling
@@ -328,6 +354,12 @@ function handleGame() {
   ) {
     player2.arm.width = 0;
     player1.health -= 5;
+    player1.image = player1.sprites.hit.image;
+    this.framesMax = player1.sprites.hit.framesMax;
+    setTimeout(() => {
+      player1.image = player1.sprites.idle.image;
+      this.framesMax = player1.sprites.idle.framesMax;
+    }, "200");
     p1_lifebar.style.width = `${player1.health}%`;
   }
 
