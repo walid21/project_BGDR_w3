@@ -4,26 +4,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./style.css" />
-    <script defer src="./game.js"></script>
-
+    <link rel="stylesheet" href="./accueil.css">
     <title>Bagarre De Rue</title>
   </head>
   <body>
-    <div id="street">
-      <header>
-        <div class="lifebar" id="p1-life">
-          <div id="p1-lost-life"></div>
-        </div>
-        <div id="timer"></div>
-        <div class="lifebar" id="p2-life">
-          <div id="p2-lost-life"></div>
-        </div>
-      </header>
-      <canvas></canvas>
-      <div class="endMessage">
-        <button type="button" class="invisible" id="restart-btn">RESTART</button>
+    <aside class="fighter">
+        <img src="./image/catcher.gif" alt="catcher">
+    </aside>
+    <section class="splash-screen load">
+      <div class="title">
+        <h1 class="title-top"><span class="big">B</span>agarre</h1>
+        <h1 class="title-middle">de</span></h1>
+        <h1 class="title-bottom"><span class="big">R</span>ue</span></h1>
       </div>
-    </div>
+
+      <div class="buttons grey-with-red">
+        <a class="purple-with-blue" href="./game.html" >Start</a>
+        <a>Player 1 vs Player 2</a>
+      </div>
+
+      <div class="bottom"> 
+          <span class="yellow">©</span><span class="yellow-with-darkyellow">LE VV 2022</span></a>
+      </div>
+    </section>
+    <aside class="fighter">
+        <img src="./image/ryu.gif" alt="ryu">
+    </aside>
   </body>
 </html>
