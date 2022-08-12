@@ -120,7 +120,7 @@ class Player extends Sprite {
       case this.keys[0]:
         this.velocity.x = -20;
         this.image = this.sprites.moveLeft.image;
-        this.framesMax = this.sprites.moveLeft.frameMax;
+        this.framesMax = this.sprites.moveLeft.framesMax;
         break;
       case this.keys[1]:
         this.velocity.y = -70;
@@ -170,7 +170,7 @@ class Player extends Sprite {
       case this.keys[4]:
         this.arm.width = 400;
         this.image = this.sprites.punch.image;
-        this.framesMax = this.sprites.idle.framesMax;
+        this.framesMax = this.sprites.punch.framesMax;
         break;
     }
   }
@@ -220,15 +220,15 @@ const player1 = new Player({
     },
     moveLeft: {
       imageSrc: "./sprite/ken_sprite/moves_left_ken-removebg-preview.png",
-      frameMax: 6,
+      framesMax: 6,
     },
     punch: {
       imageSrc: "./sprite/ken_sprite/hit_two_ken-removebg-preview.png",
-      frameMax: 3,
+      framesMax: 3,
     },
     hit: {
       imageSrc: "./sprite/ken_sprite/hit_ken-removebg-preview.png",
-      frameMax: 3,
+      framesMax: 3,
     },
   },
   scale: 1,
@@ -272,15 +272,15 @@ const player2 = new Player({
     },
     moveLeft: {
       imageSrc: "./sprite/wizard_sprite/Run_left.png",
-      frameMax: 8,
+      framesMax: 8,
     },
     punch: {
       imageSrc: "./sprite/wizard_sprite/Attack2.png",
-      frameMax: 8,
+      framesMax: 8,
     },
     hit: {
       imageSrc: "./sprite/wizard_sprite/Hit.png",
-      frameMax: 4,
+      framesMax: 4,
     },
   },
   scale: 2,
@@ -384,23 +384,8 @@ window.addEventListener("keyup", (event) => {
   player2.cover(event.key);
 });
 
-// window.addEventListener("keydown", (event) => {
-//   //setTimeout(() => {
-//   player1.attack(event.key);
-//   player2.attack(event.key);
-//   //}, "100");
-// });
-
-// window.addEventListener("keyup", (event) => {
-//   //setTimeout(() => {
-//   player1.cover(event.key);
-//   player2.cover(event.key);
-//   //}, "200");
-// });
-
 restartBtn.addEventListener("click", () => {
   setTimeout(() => {
-    time = 120;
     restartBtn.classList.add("invisible");
     p1_lifebar.style.width = "100%";
     p2_lifebar.style.width = "100%";
