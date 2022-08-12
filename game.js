@@ -341,7 +341,7 @@ function handleGame() {
     setTimeout(() => {
       player2.image = player2.sprites.idle.image;
       this.framesMax = player2.sprites.idle.framesMax;
-    }, "180j");
+    }, "180");
 
     p2_lifebar.style.width = `${player2.health}%`;
   }
